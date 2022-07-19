@@ -1,8 +1,11 @@
 import express from 'express'
 import http from 'http'
 import mongoose from 'mongoose'
+
 import { config } from './config/config'
 import Logging from './library/Logging'
+
+import AuthorRoutes from './routes/author.routes'
 
 const router = express()
 
@@ -12,7 +15,7 @@ mongoose.connect(config.mongo.url).then(() => {
   StartServer()
 })
   .catch(err => {
-    Logging.error('Unadle to connect')
+    Logging.error('Unable to connect')
     Logging.error(err)
   })
 
@@ -45,6 +48,7 @@ const StartServer = () => {
   })
 
   // Routes
+  router.use('/authors', AuthorRoutes)
 
   // Health Check
   router.get('/ping', (req, res, next) => res.status(200).json({ message: 'pong' }))
